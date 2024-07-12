@@ -1,6 +1,10 @@
 import Express from "express";
 import "dotenv/config";
 import { createTextEmbeddings } from "./storing-pdf";
+import { vectorSearch } from "./mongo";
+import _ from "lodash";
+const {isNil} = _;
+
 const app = Express();
 
 app.use('/', Express.json())
@@ -16,7 +20,16 @@ app.post('/chat', async (req, res) => {
     let chatEmbedding = await createTextEmbeddings(chat);
 
     // Vector search db
-    
+    let response = await vectorSearch(chatEmbedding.embedding);
+    if (isNil(response)) {
+        return res.json({message: "No Data"})
+    }
+
+    // Pipe response to ChatGPT to make it more friendly
+
+    // Add chat
+
+    return res.json(response);
 })
 
 app.all('*', (req, res) => {

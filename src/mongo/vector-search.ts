@@ -3,7 +3,8 @@ import { EMBEDDINGS } from "./db";
 import "dotenv/config";
 import { createTextEmbeddings } from "../storing-pdf";
 
-export async function vectorSearch(embedding: number[]): Promise<{ bill: string, source: string }[]> {
+//@ts-ignore
+export async function vectorSearch(embedding: number[]): Promise<{ bill: string, source: string } | null> {
     try {
         // Define pipeline
         const agg = [
@@ -30,9 +31,10 @@ export async function vectorSearch(embedding: number[]): Promise<{ bill: string,
 
         const result = EMBEDDINGS.aggregate(agg);
         for await (let res of result) {
-            console.log("Doc =>", res)
+            if(res.score > 0.9) {
+                return {bill: res.bill, source: res.source}
+            }
         }
-        return [];
     } catch (err) {
         console.log("Error Getting Vectors =>", err);
         throw "Error Getting Vectors";

@@ -13,14 +13,3 @@ export async function createTextEmbeddings(text: string): Promise<Embedding[]> {
         throw "Error Creating Embedding";
     }
 }
-
-if(process.env.DEBUG_MODE) {
-    async function test() {
-        try {
-            createTextEmbeddings("I am awesome");
-        } catch(err) {
-            console.log("Error Testing => ", err);
-        }
-    }
-    test()
-}

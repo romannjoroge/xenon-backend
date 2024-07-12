@@ -19,15 +19,3 @@ export async function readPDF(pdfPath: string): Promise<string[]> {
         throw "Error Reading PDF";
     }
 }
-
-if(process.env.DEBUG_MODE) {
-    async function test() {
-        try {
-            let pdf = await readPDF("./bills/Published Information and Communication Technology Authority Bill, 2024..pdf");
-            console.log(pdf);
-        } catch(err) {
-            console.log("Test Error =>", err);
-        }
-    }
-    test()
-}

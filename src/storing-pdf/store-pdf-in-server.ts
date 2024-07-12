@@ -12,7 +12,7 @@ export async function storePDFEmbeddingsInDB(pdfPath: string, billName: string) 
             let embeddings = await createTextEmbeddings(page);
 
             // Store embeddings
-            await storeEmbeddings({bill: billName, embedding: embeddings, source: page});
+            await storeEmbeddings({bill: billName, embedding: embeddings.embedding, source: page});
             console.log("Page Stored");
         }
         console.log("Done!");
@@ -25,9 +25,9 @@ export async function storePDFEmbeddingsInDB(pdfPath: string, billName: string) 
 if(process.env.DEBUG_MODE) {
     async function test() {
         try {
-            await storePDFEmbeddingsInDB("./bills/Published Information and Communication Technology Authority Bill, 2024..pdf", "Information and Communication Technology Authority Bill");
+            await storePDFEmbeddingsInDB("./bills/Published Information and Communication Technology Authority Bill, 2024..pdf" ,"Information and Communication Technology Authority Bill")
         } catch(err) {
-            console.log("Testing Error =>", err);
+            console.log("Error Testing =>", err);
         }
     }
     test()

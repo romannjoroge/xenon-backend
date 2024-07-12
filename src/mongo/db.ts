@@ -7,7 +7,7 @@ const DATABASE = client.db("convergence-stash")
 
 export interface IEMBEDDINGS {
     bill: string,
-    embedding: Embedding[],
+    embedding: number[],
     source: string
 }
 

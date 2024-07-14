@@ -1,8 +1,9 @@
 import Express from "express";
 import "dotenv/config";
 import { createTextEmbeddings } from "./storing-pdf";
-import { vectorSearch } from "./mongo";
+import { createChat, createUserAccount, vectorSearch } from "./mongo";
 import _ from "lodash";
+import { sendChat } from "./chat";
 const {isNil} = _;
 
 const app = Express();
@@ -13,23 +14,39 @@ app.get('/test', (req, res) => {
     res.send("Reachable")
 })
 
+app.post('/createUser', async (req, res) => {
+    let {email, displayName} = req.body;
+
+    try {
+        let userID = await createUserAccount(email, displayName);
+        return res.status(201).json({userID})
+    } catch(err) {
+        return res.status(500).json({message: err})
+    }
+})
+
+app.post('/createChat', async (req, res) => {
+    let {userID} = req.body;
+
+    try {
+        let chatID = await createChat(userID);
+        return res.status(201).json({chatID})
+    } catch(err) {
+        return res.status(500).json({message: err});
+    }
+})
+
 app.post('/chat', async (req, res) => {
     // Convert chat to embedding
-    let {chat} = req.body;
+    let {chat, userID, chatID} = req.body;
 
-    let chatEmbedding = await createTextEmbeddings(chat);
-
-    // Vector search db
-    let response = await vectorSearch(chatEmbedding.embedding);
-    if (isNil(response)) {
-        return res.json({message: "No Data"})
+    try {
+        let response = await sendChat(userID, chatID, chat);    
+    
+        return res.json({response});
+    } catch(err) {
+        return res.status(500).json({message: err});
     }
-
-    // Pipe response to ChatGPT to make it more friendly
-
-    // Add chat
-
-    return res.json(response);
 })
 
 app.all('*', (req, res) => {

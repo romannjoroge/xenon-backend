@@ -17,7 +17,7 @@ export interface IUSERCHATS {
     chats: {
         chatid: string,
         messages: {
-            role: string,
+            role: 'user' | 'system',
             content: string
         }[]
     }[]

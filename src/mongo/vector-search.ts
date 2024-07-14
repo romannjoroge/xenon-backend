@@ -31,7 +31,7 @@ export async function vectorSearch(embedding: number[]): Promise<{ bill: string,
 
         const result = EMBEDDINGS.aggregate(agg);
         for await (let res of result) {
-            if(res.score > 0.9) {
+            if(res.score > 0.8) {
                 return {bill: res.bill, source: res.source}
             }
         }

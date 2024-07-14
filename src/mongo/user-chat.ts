@@ -1,5 +1,9 @@
 import { USERCHATS } from "./db";
 import "dotenv/config";
+import {randomUUID} from "crypto"
+import _ from "lodash";
+import { ObjectId } from "mongodb";
+const {isNil} = _;
 
 export async function createUserAccount(email: string, displayName: string): Promise<string> {
     try {
@@ -15,14 +19,22 @@ export async function createUserAccount(email: string, displayName: string): Pro
     }
 }
 
-if(process.env.DEBUG_MODE) {
-    async function test() {
-        try {
-            let id = await createUserAccount("test@test.com", "Tester");
-            console.log(id);
-        } catch(err) {
-            console.log("Test Error =>", err);
+export async function createChat(userID: string): Promise<string> {
+    try {
+        let userChat = await USERCHATS.findOne({_id: new ObjectId(userID)});
+        if(!isNil(userChat)) {
+            let chatID = randomUUID();
+            userChat.chats.push({chatid: chatID, messages:[]})
+            await USERCHATS.updateOne({_id: userChat._id}, {$set: {chats: userChat.chats}})
+            return chatID;
+        } 
+        throw "User Does Not Exist";
+    } catch(err) {
+        console.log("Error Creating Chat", err)
+        if(typeof(err) === 'string') {
+            throw err;
+        } else {
+            throw "Error Creating Chat";
         }
-    }
-    test()
+    }   
 }

@@ -15,8 +15,7 @@ export interface IUSERCHATS {
     email: string,
     displayName: string,
     chats: {
-        chatid: number,
-        bill: string,
+        chatid: string,
         messages: {
             role: string,
             content: string

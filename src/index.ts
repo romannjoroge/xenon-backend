@@ -1,7 +1,7 @@
 import Express from "express";
 import "dotenv/config";
 import { createTextEmbeddings } from "./storing-pdf";
-import { createChat, createUserAccount, vectorSearch } from "./mongo";
+import { createChat, createUserAccount, createBill, searchForBill } from "./mongo";
 import _ from "lodash";
 import { sendChat } from "./chat";
 const {isNil} = _;
@@ -34,7 +34,7 @@ app.post('/createChat', async (req, res) => {
     } catch(err) {
         return res.status(500).json({message: err});
     }
-})
+});
 
 app.post('/chat', async (req, res) => {
     // Convert chat to embedding
@@ -44,6 +44,18 @@ app.post('/chat', async (req, res) => {
         let response = await sendChat(userID, chatID, chat);    
     
         return res.json({response});
+    } catch(err) {
+        return res.status(500).json({message: err});
+    }
+})
+
+app.get("/searchForBill", async(req, res) => {
+    let {body, name} = req.query;
+
+    try {
+        //@ts-ignore
+        let bills = await searchForBill({body, name});
+        return res.json(bills);
     } catch(err) {
         return res.status(500).json({message: err});
     }

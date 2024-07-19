@@ -1,19 +1,24 @@
-import PdfPrinter = require('pdfmake');
+import PdfPrinter from 'pdfmake';
 import * as fs from 'fs';
+import * as path from 'path';
 import {content as ct} from './tt';
+import { fileURLToPath } from 'url';
+
 interface PDFdata {
     serialno: string;
     section: string;
     proposal: string;
     justification: string;
 }
+const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
+const __dirname = path.dirname(__filename); // get the name of the directory
 const fonts = {
     Roboto: {
-        normal: 'fonts/Roboto-Regular.ttf',
-        bold: 'fonts/Roboto-Medium.ttf',
-        italics: 'fonts/Roboto-Italic.ttf',
-        bolditalics: 'fonts/Roboto-MediumItalic.ttf'
-    }
+        normal: path.resolve(__dirname, 'fonts/Roboto-Regular.ttf'),
+        bold: path.resolve(__dirname, 'fonts/Roboto-Medium.ttf'),
+        italics: path.resolve(__dirname, 'fonts/Roboto-Italic.ttf'),
+        bolditalics: path.resolve(__dirname, 'fonts/Roboto-MediumItalic.ttf'),
+    },
 };
 const printer = new PdfPrinter(fonts)
 /**

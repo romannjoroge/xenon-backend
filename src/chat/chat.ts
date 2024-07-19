@@ -14,11 +14,9 @@ export async function sendChat(userID: string, chatID: string, question: string)
     
         // Pipe response to ChatGPT to make it more friendly
         let previousMessages = await getChats(userID, chatID);
+
         if (isNil(response)) {
-            previousMessages.push({
-                role: 'user',
-                content: `I am asking this question, ${question}. If the answer to this question can not be found in previous messages please tell me that don't know the answer`
-            })
+            return "Please ask a question about bills"
         } else {
             previousMessages.push({
             role: 'user',

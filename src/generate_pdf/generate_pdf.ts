@@ -1,7 +1,6 @@
 import PdfPrinter from 'pdfmake';
 import * as fs from 'fs';
 import * as path from 'path';
-import {content as ct} from './tt';
 import { fileURLToPath } from 'url';
 
 interface PDFdata {

@@ -43,3 +43,14 @@ export async function searchForBill(input: {body?: Body, name?: string}): Promis
         throw "Error Getting Bills";
     }
 }
+
+export async function getBillDetails(id: string): Promise<IBILLS | null> {
+    try {
+        let ID = new ObjectId(id);
+        let bill = await BILLS.findOne({_id: ID});
+        return bill;
+    } catch(err) {
+        console.log(err, "Could Not Get Details Of Bill");
+        throw "Could Not Get Details Of Bill";
+    }
+}

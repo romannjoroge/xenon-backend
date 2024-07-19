@@ -1,7 +1,6 @@
 import Express from "express";
 import "dotenv/config";
-import { createTextEmbeddings } from "./storing-pdf";
-import { createChat, createUserAccount, createBill, searchForBill } from "./mongo";
+import { createChat, createUserAccount, getBillDetails, searchForBill } from "./mongo";
 import _ from "lodash";
 import { sendChat } from "./chat";
 const {isNil} = _;
@@ -56,6 +55,15 @@ app.get("/searchForBill", async(req, res) => {
         //@ts-ignore
         let bills = await searchForBill({body, name});
         return res.json(bills);
+    } catch(err) {
+        return res.status(500).json({message: err});
+    }
+})
+
+app.get("/getBill/:id", async(req, res) => {
+    try {
+        let bill = await getBillDetails(req.params.id)
+        return res.json(bill);
     } catch(err) {
         return res.status(500).json({message: err});
     }

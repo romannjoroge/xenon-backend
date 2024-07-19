@@ -44,6 +44,6 @@ export function generatePDF(content: PDFdata[], name: string) {
     const pdfDoc = printer.createPdfKitDocument(docDefinition);
     return pdfDoc;
 }
-const pdfDoc = generatePDF(ct, 'Test PDF');
-pdfDoc.pipe(fs.createWriteStream('output.pdf'));
-pdfDoc.end();
+// const pdfDoc = generatePDF(ct, 'Test PDF');
+// pdfDoc.pipe(fs.createWriteStream('output.pdf'));
+// pdfDoc.end();

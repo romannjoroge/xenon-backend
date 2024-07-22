@@ -21,14 +21,3 @@ export async function storePDFEmbeddingsInDB(pdfPath: string, billName: string) 
         throw "Error Storing PDF In DB";
     }
 }
-
-if(process.env.DEBUG_MODE) {
-    async function test() {
-        try {
-            await storePDFEmbeddingsInDB("./bills/Published Information and Communication Technology Authority Bill, 2024..pdf" ,"Information and Communication Technology Authority Bill")
-        } catch(err) {
-            console.log("Error Testing =>", err);
-        }
-    }
-    test()
-}

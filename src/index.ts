@@ -1,8 +1,8 @@
 import Express from "express";
 import "dotenv/config";
-import { createChat, createUserAccount, getBillDetails, searchForBill } from "./mongo";
+import { createChat, createUserAccount, getBillDetails, searchForBill } from "./mongo/index.js";
 import _ from "lodash";
-import { sendChat } from "./chat";
+import { sendChat } from "./chat/index.js";
 import {
     Webhook,
     WebhookRequiredHeaders,

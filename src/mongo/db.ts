@@ -18,7 +18,8 @@ export interface IUSERCHATS {
         messages: {
             role: 'user' | 'system',
             content: string
-        }[]
+        }[],
+        surplus: number
     }[]
 }
 

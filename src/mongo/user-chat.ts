@@ -1,4 +1,4 @@
-import { USERCHATS } from "./db";
+import { USERCHATS } from "./db.js";
 import "dotenv/config";
 import { randomUUID } from "crypto";
 import _ from "lodash";
@@ -27,7 +27,7 @@ export async function createChat(userID: string): Promise<string> {
     let userChat = await USERCHATS.findOne({ _id: new ObjectId(userID) });
     if (!isNil(userChat)) {
       let chatID = randomUUID();
-      userChat.chats.push({ chatid: chatID, messages: [] });
+      userChat.chats.push({ chatid: chatID, messages: [], surplus: 0 });
       await USERCHATS.updateOne(
         { _id: userChat._id },
         { $set: { chats: userChat.chats } },
@@ -48,14 +48,16 @@ export async function createChat(userID: string): Promise<string> {
 export async function storeChats(
   userID: string,
   chatID: string,
-  messages: { role: "user" | "system"; content: string }[],
+  chats: {chats: { role: "user" | "system"; content: string }[], surplus: number},
 ) {
   try {
     let userChat = await USERCHATS.findOne({ _id: new ObjectId(userID) });
     if (!isNil(userChat)) {
       let chatMessages = userChat.chats.find((chat) => chat.chatid == chatID);
       if (!isNil(chatMessages)) {
-        chatMessages.messages.push(...messages);
+        chatMessages.surplus = chats.surplus
+        let messages = chats.chats
+        chatMessages.messages = messages;
         for (let i = 0; i < userChat.chats.length; i++) {
           if (userChat.chats[i].chatid == chatMessages.chatid) {
             userChat.chats[i] = chatMessages;
@@ -81,13 +83,13 @@ export async function storeChats(
 export async function getChats(
   userID: string,
   chatID: string,
-): Promise<{ role: "user" | "system"; content: string }[]> {
+): Promise<{chats: { role: "user" | "system"; content: string }[], surplus: number}> {
   try {
     let userChat = await USERCHATS.findOne({ _id: new ObjectId(userID) });
     if (!isNil(userChat)) {
       let chatMessages = userChat.chats.find((chat) => chat.chatid == chatID);
       if (!isNil(chatMessages)) {
-        return chatMessages.messages;
+        return {chats: chatMessages.messages, surplus: chatMessages.surplus};
       } else {
         throw "Chat Does Not Exist";
       }

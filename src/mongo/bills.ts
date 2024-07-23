@@ -1,5 +1,5 @@
 import { FindCursor, ObjectId, WithId } from "mongodb";
-import { BILLS, IBILLS, Body, Stage } from "./db";
+import { BILLS, IBILLS, Body, Stage } from "./db.js";
 
 export async function createBill(input: IBILLS) {
     try {

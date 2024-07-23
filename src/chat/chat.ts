@@ -1,3 +1,4 @@
+import "dotenv/config";
 import { getChats, storeChats, vectorSearch } from "../mongo/index.js";
 import { createTextEmbeddings } from "../storing-pdf/index.js";
 import _ from "lodash";
@@ -33,7 +34,7 @@ export async function sendChat(userID: string, chatID: string, question: string)
         }
 
         // Make sure chat doesn't pass tokens limit
-        let tokenLimit = 1000
+        let tokenLimit = Number.parseInt(process.env.TOKEN_LIMIT ?? '4000')
         let isPassed = true
         while (isPassed) {
             isPassed = isWithinTokenLimit(completionMessages.chats, tokenLimit) === false;
@@ -66,16 +67,4 @@ export async function sendChat(userID: string, chatID: string, question: string)
         console.log("Error Chating =>", err)
         throw "Error Chating";
     }
-}
-
-if(process.env.DEBUG_MODE) {
-    async function test() {
-        try {
-            let response = await sendChat("6693ab0068641aa25c44a952", "fce84860-2557-4792-a77c-8fca4e08457f", "What can make someone illegible for chairman in the sanitary pads bill")
-            console.log(response);
-        } catch(err) {
-            console.log("Test Error => ", err);
-        }
-    }
-    test()
 }

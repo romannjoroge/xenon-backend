@@ -28,6 +28,7 @@
     "lodash": "^4.17.21",
     "mongodb": "^6.8.0",
     "openai": "^4.0.0",
+    "pdf-img-convert": "^1.2.1",
     "pdf-text-reader": "^5.1.0",
     "pdfmake": "^0.2.10",
     "svix": "^1.25.0"

@@ -12,6 +12,7 @@ export interface IEMBEDDINGS {
 
 export interface IUSERCHATS {
     email: string,
+    id: string,
     displayName: string,
     chats: {
         chatid: string,

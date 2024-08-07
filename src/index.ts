@@ -8,6 +8,7 @@ import {
     WebhookRequiredHeaders,
     WebhookUnbrandedRequiredHeaders,
 } from "svix";
+import { feedBackSchema } from "./schema/index.js";
 const { isNil } = _;
 
 const app = Express();
@@ -115,6 +116,21 @@ app.post("/chat", async (req, res) => {
     } catch (err) {
         return res.status(500).json({ message: err });
     }
+});
+
+app.post("/feedback", async (req, res) => {
+    let feedback = feedBackSchema.safeParse(req.body);
+    if(!feedback.success) {
+        return res.status(500).json({message: "Invalid Feedback"});
+    }
+    
+    let feedBackData = feedback.data;
+    if (feedBackData.length === 0) {
+        return res.status(500).json({message: "Feedback Cannot Be Empty"});
+    }
+
+    console.log(feedBackData);
+    res.send("Feedback sent");
 });
 
 app.all("*", (req, res) => {

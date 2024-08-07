@@ -1,7 +1,5 @@
-import { Embedding } from "openai/resources";
-import { EMBEDDINGS } from "./db";
+import { EMBEDDINGS } from "./db.js";
 import "dotenv/config";
-import { createTextEmbeddings } from "../storing-pdf";
 
 //@ts-ignore
 export async function vectorSearch(embedding: number[]): Promise<{ bill: string, source: string } | null> {

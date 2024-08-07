@@ -6,11 +6,13 @@ import { ObjectId } from "mongodb";
 const { isNil } = _;
 
 export async function createUserAccount(
+  userid: string,
   email: string,
   displayName: string,
 ): Promise<string> {
   try {
     let doc = await USERCHATS.insertOne({
+      id: userid,// console.log(emailObj, username);
       email,
       displayName,
       chats: [],

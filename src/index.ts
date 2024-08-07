@@ -58,10 +58,11 @@ app.post("/createUser", async (req, res) => {
 
     try {
         const userData = JSON.parse(payload);
+        console.log(userData);
+        const userID = userData.data.id;
         const emailObj = userData.data.email_addresses[0];
         const username = userData.data.username;
-        // console.log(emailObj, username);
-        let userID = await createUserAccount(emailObj.email_address, username);
+        createUserAccount(userID, emailObj.email_address, username);
         console.log("userID=>", userID);
         return res.status(201).json({ userID });
     } catch (error) {

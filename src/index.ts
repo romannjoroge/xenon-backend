@@ -1,6 +1,6 @@
 import Express from "express";
 import "dotenv/config";
-import { createChat, createUserAccount, getBillDetails, searchForBill } from "./mongo/index.js";
+import { createChat, createUserAccount, getBillDetails, getBills, searchForBill } from "./mongo/index.js";
 import _ from "lodash";
 import { sendChat } from "./chat/index.js";
 import {
@@ -82,6 +82,21 @@ app.get("/searchForBill", async (req, res) => {
         return res.json(bills);
     } catch (err) {
         return res.status(500).json({ message: err });
+    }
+})
+
+app.get("/bills", async (req, res) => {
+    try {
+        let {page, size} = req.query;
+
+        //@ts-ignore
+        let pageNum = Number.parseInt(page);
+        //@ts-ignore
+        let sizeNum = Number.parseInt(size);
+        let bills = await getBills(pageNum, sizeNum);
+        return res.json(bills);
+    } catch(err) {
+        return res.status(500).json({message: err});
     }
 })
 

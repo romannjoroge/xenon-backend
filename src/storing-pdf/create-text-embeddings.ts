@@ -1,4 +1,4 @@
-import {Embedding} from "openai/resources/index.js";
+import { Embedding } from "openai/resources/embeddings.mjs";
 import { openai } from "./open-ai.js";
 
 export async function createTextEmbeddings(text: string): Promise<Embedding> {

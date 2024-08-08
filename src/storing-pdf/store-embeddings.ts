@@ -1,6 +1,6 @@
 import "dotenv/config";
-import { EMBEDDINGS, IEMBEDDINGS } from "../mongo";
-import { createTextEmbeddings } from "./create-text-embeddings";
+import { EMBEDDINGS, IEMBEDDINGS } from "../mongo/index.js";
+import { createTextEmbeddings } from "./create-text-embeddings.js";
 
 export async function storeEmbeddings(args: IEMBEDDINGS) {
     try {

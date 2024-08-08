@@ -1,6 +1,6 @@
-import { createTextEmbeddings } from "./create-text-embeddings";
-import { readPDF } from "./read-pdf";
-import { storeEmbeddings } from "./store-embeddings";
+import { createTextEmbeddings } from "./create-text-embeddings.js";
+import { readPDF } from "./read-pdf.js";
+import { storeEmbeddings } from "./store-embeddings.js";
 
 export async function storePDFEmbeddingsInDB(pdfPath: string, billName: string) {
     try {

@@ -1,5 +1,4 @@
 import { createBill, IBILLS } from "../mongo/index.js";
-import { readFileSync } from "fs";
 
 export async function storeEntirePDF(input: IBILLS) {
     try {

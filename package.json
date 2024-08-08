@@ -6,6 +6,8 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node dist/index.js",
+    "build": "rm -rf dist && tsup",
     "dev": "npx nodemon"
   },
   "keywords": [],
@@ -30,6 +32,7 @@
     "openai": "^4.0.0",
     "pdf-text-reader": "^5.1.0",
     "pdfmake": "^0.2.10",
-    "svix": "^1.25.0"
+    "svix": "^1.25.0",
+    "zod": "^3.23.8"
   }
 }

@@ -8,6 +8,7 @@ import {
     WebhookRequiredHeaders,
     WebhookUnbrandedRequiredHeaders,
 } from "svix";
+import { feedBackSchema } from "./schema/index.js";
 const { isNil } = _;
 
 const app = Express();
@@ -58,10 +59,11 @@ app.post("/createUser", async (req, res) => {
 
     try {
         const userData = JSON.parse(payload);
+        console.log(userData);
+        const userID = userData.data.id;
         const emailObj = userData.data.email_addresses[0];
         const username = userData.data.username;
-        // console.log(emailObj, username);
-        let userID = await createUserAccount(emailObj.email_address, username);
+        createUserAccount(userID, emailObj.email_address, username);
         console.log("userID=>", userID);
         return res.status(201).json({ userID });
     } catch (error) {
@@ -114,6 +116,21 @@ app.post("/chat", async (req, res) => {
     } catch (err) {
         return res.status(500).json({ message: err });
     }
+});
+
+app.post("/feedback", async (req, res) => {
+    let feedback = feedBackSchema.safeParse(req.body);
+    if(!feedback.success) {
+        return res.status(500).json({message: "Invalid Feedback"});
+    }
+    
+    let feedBackData = feedback.data;
+    if (feedBackData.length === 0) {
+        return res.status(500).json({message: "Feedback Cannot Be Empty"});
+    }
+
+    console.log(feedBackData);
+    res.send("Feedback sent");
 });
 
 app.all("*", (req, res) => {

@@ -6,11 +6,13 @@ import { ObjectId } from "mongodb";
 const { isNil } = _;
 
 export async function createUserAccount(
+  userid: string,
   email: string,
   displayName: string,
 ): Promise<string> {
   try {
     let doc = await USERCHATS.insertOne({
+      id: userid,// console.log(emailObj, username);
       email,
       displayName,
       chats: [],
@@ -24,7 +26,7 @@ export async function createUserAccount(
 
 export async function createChat(userID: string): Promise<string> {
   try {
-    let userChat = await USERCHATS.findOne({ _id: new ObjectId(userID) });
+    let userChat = await USERCHATS.findOne({ id: userID });
     if (!isNil(userChat)) {
       let chatID = randomUUID();
       userChat.chats.push({ chatid: chatID, messages: [], surplus: 0 });
@@ -51,7 +53,7 @@ export async function storeChats(
   chats: {chats: { role: "user" | "system"; content: string }[], surplus: number},
 ) {
   try {
-    let userChat = await USERCHATS.findOne({ _id: new ObjectId(userID) });
+    let userChat = await USERCHATS.findOne({ id: userID });
     if (!isNil(userChat)) {
       let chatMessages = userChat.chats.find((chat) => chat.chatid == chatID);
       if (!isNil(chatMessages)) {
@@ -85,7 +87,7 @@ export async function getChats(
   chatID: string,
 ): Promise<{chats: { role: "user" | "system"; content: string }[], surplus: number}> {
   try {
-    let userChat = await USERCHATS.findOne({ _id: new ObjectId(userID) });
+    let userChat = await USERCHATS.findOne({id: userID });
     if (!isNil(userChat)) {
       let chatMessages = userChat.chats.find((chat) => chat.chatid == chatID);
       if (!isNil(chatMessages)) {

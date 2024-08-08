@@ -85,6 +85,14 @@ app.get("/searchForBill", async (req, res) => {
     }
 })
 
+app.get("/bills", async (req, res) => {
+    try {
+
+    } catch(err) {
+        
+    }
+})
+
 app.get("/getBill/:id", async (req, res) => {
     try {
         let bill = await getBillDetails(req.params.id)

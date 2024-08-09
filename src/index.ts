@@ -90,7 +90,7 @@ app.get("/searchForBill", async (req, res) => {
 
 app.get("/bills", async (req, res) => {
     try {
-        let {page, size} = req.query;
+        let { page, size } = req.query;
 
         //@ts-ignore
         let pageNum = Number.parseInt(page);
@@ -98,8 +98,8 @@ app.get("/bills", async (req, res) => {
         let sizeNum = Number.parseInt(size);
         let bills = await getBills(pageNum, sizeNum);
         return res.json(bills);
-    } catch(err) {
-        return res.status(500).json({message: err});
+    } catch (err) {
+        return res.status(500).json({ message: err });
     }
 })
 
@@ -139,16 +139,25 @@ app.post("/chat", async (req, res) => {
 app.post("/feedback/:id", async (req, res) => {
     let feedback = feedBackSchema.safeParse(req.body);
     let id = req.params.id;
-    if(!feedback.success) {
-        return res.status(500).json({message: "Invalid Feedback"});
-    }
-    
-    let feedBackData = feedback.data;
-    if (feedBackData.length === 0) {
-        return res.status(500).json({message: "Feedback Cannot Be Empty"});
+    if (!feedback.success) {
+        return res.status(500).json({ message: "Invalid Feedback" });
     }
 
-    let pdf = generatePDF(feedBackData, "Feedback");
+    let feedBackData = feedback.data;
+    if (feedBackData.length === 0) {
+        return res.status(500).json({ message: "Feedback Cannot Be Empty" });
+    }
+
+    let generatePDFData = feedBackData.map((e) => {
+        return {
+            serialno: e.serial,
+            section: e.section,
+            proposal: e.proposal,
+            justification: e.justification,
+        }
+    })
+
+    let pdf = generatePDF(generatePDFData, "Feedback");
     pdf.pipe(fs.createWriteStream('output.pdf'));
     pdf.end();
 
@@ -160,7 +169,7 @@ app.post("/feedback/:id", async (req, res) => {
         [feedbackDetails.email],
         'output.pdf'
     );
-    res.status(201).json({message: "Feedback sent"});
+    res.status(201).json({ message: "Feedback sent" });
 });
 
 app.all("*", (req, res) => {

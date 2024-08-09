@@ -1,6 +1,7 @@
 import Express from "express";
 import "dotenv/config";
-import { createChat, createUserAccount, getBillDetails, getBills, searchForBill } from "./mongo/index.js";
+import fs from "fs";
+import { createChat, createUserAccount, getBillDetails, getBillFeedbackDetails, getBills, searchForBill } from "./mongo/index.js";
 import _ from "lodash";
 import { sendChat } from "./chat/index.js";
 import {
@@ -9,6 +10,8 @@ import {
     WebhookUnbrandedRequiredHeaders,
 } from "svix";
 import { feedBackSchema } from "./schema/index.js";
+import { generatePDF } from "./generate_pdf/generate_pdf.js";
+import sendEmail from "./mail/send-emailt.js";
 const { isNil } = _;
 
 const app = Express();
@@ -133,8 +136,9 @@ app.post("/chat", async (req, res) => {
     }
 });
 
-app.post("/feedback", async (req, res) => {
+app.post("/feedback/:id", async (req, res) => {
     let feedback = feedBackSchema.safeParse(req.body);
+    let id = req.params.id;
     if(!feedback.success) {
         return res.status(500).json({message: "Invalid Feedback"});
     }
@@ -144,8 +148,19 @@ app.post("/feedback", async (req, res) => {
         return res.status(500).json({message: "Feedback Cannot Be Empty"});
     }
 
-    console.log(feedBackData);
-    res.send("Feedback sent");
+    let pdf = generatePDF(feedBackData, "Feedback");
+    pdf.pipe(fs.createWriteStream('output.pdf'));
+    pdf.end();
+
+    let feedbackDetails = await getBillFeedbackDetails(id);
+    await sendEmail(
+        `feedback@${process.env.MAIL_DOMAIN}`,
+        `Feedback to ${feedbackDetails.name}`,
+        "<p> Attached below is feedback to the above stated bill",
+        [feedbackDetails.email],
+        'output.pdf'
+    );
+    res.status(201).json({message: "Feedback sent"});
 });
 
 app.all("*", (req, res) => {

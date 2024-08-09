@@ -1,5 +1,8 @@
-import { FindCursor, ObjectId, WithId } from "mongodb";
+import { ObjectId } from "mongodb";
 import { BILLS, IBILLS, Body, Stage } from "./db.js";
+import _ from "lodash";
+const {isNil} = _;
+import "dotenv/config.js";
 
 export async function createBill(input: IBILLS) {
     try {
@@ -71,5 +74,27 @@ export async function getBillDetails(id: string): Promise<IBILLS | null> {
     } catch (err) {
         console.log(err, "Could Not Get Details Of Bill");
         throw "Could Not Get Details Of Bill";
+    }
+}
+
+export async function getBillFeedbackDetails(id: string): Promise<{email: string, name: string}> {
+    try {
+        let feedbackDetails = await BILLS.findOne({_id: new ObjectId(id)});
+
+        if(isNil(feedbackDetails)) {
+            throw "Bill Does Not Exist";
+        }
+        if(!process.env.TEST_MODE) {
+            return {email: feedbackDetails.feedbackEmail, name: feedbackDetails.name}
+        } else {
+            return {email: 'roman.njoroge@njuguna.com', name: feedbackDetails.name}
+        }
+    } catch(err) {
+        console.log()
+        if (typeof err === 'string') {
+            throw err;
+        } else {
+            throw "Could Not Get Bill Details";
+        }
     }
 }

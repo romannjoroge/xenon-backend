@@ -1,1 +1,1 @@
-export * from './generate_pdf'
+export * from './generate_pdf.js'

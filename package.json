@@ -28,6 +28,7 @@
     "express": "^4.19.2",
     "gpt-tokenizer": "^2.2.1",
     "lodash": "^4.17.21",
+    "mailersend": "^2.2.0",
     "mongodb": "^6.8.0",
     "openai": "^4.0.0",
     "pdf-text-reader": "^5.1.0",
